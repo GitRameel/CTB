@@ -63,8 +63,10 @@ function App() {
     setPineScript("");
 
     try {
+      // Remove slash from symbol for API call
+      const formattedSymbol = symbol.replace("/", "");
       const response = await axios.post(`${API}/generate-pinescript`, {
-        symbol: symbol,
+        symbol: formattedSymbol,
         exchange: exchange,
         lookback_days: 30,
         min_success_rate: 0.65
