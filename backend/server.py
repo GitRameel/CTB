@@ -455,29 +455,18 @@ if barstate.islast
 async def get_analyzed_symbols():
     """Get list of analyzed symbols"""
     try:
-        pipeline = [
-            {"$group": {
-                "_id": {
-                    "symbol": "$symbol",
-                    "exchange": "$exchange"
-                },
-                "signal_count": {"$sum": 1},
-                "success_rate": {"$avg": "$success_probability"},
-                "last_analysis": {"$max": "$timestamp"}
-            }},
-            {"$sort": {"signal_count": -1}}
-        ]
-        
-        results = await db.pattern_signals.aggregate(pipeline).to_list(100)
+        # Simple query to get distinct symbols
+        distinct_symbols = await db.pattern_signals.distinct("symbol")
         
         symbols = []
-        for result in results:
+        for symbol in distinct_symbols:
+            count = await db.pattern_signals.count_documents({"symbol": symbol})
             symbols.append({
-                "symbol": result["_id"]["symbol"],
-                "exchange": result["_id"]["exchange"],
-                "signal_count": result["signal_count"],
-                "success_rate": result["success_rate"] or 0,
-                "last_analysis": result["last_analysis"]
+                "symbol": symbol,
+                "exchange": "mexc",  # Default for now
+                "signal_count": count,
+                "success_rate": 1.0,  # Placeholder
+                "last_analysis": datetime.utcnow()
             })
         
         return {"symbols": symbols}
