@@ -476,7 +476,7 @@ async def get_analyzed_symbols():
                 "symbol": result["_id"]["symbol"],
                 "exchange": result["_id"]["exchange"],
                 "signal_count": result["signal_count"],
-                "success_rate": result["success_rate"],
+                "success_rate": result["success_rate"] or 0,
                 "last_analysis": result["last_analysis"]
             })
         
