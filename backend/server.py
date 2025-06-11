@@ -457,7 +457,10 @@ async def get_analyzed_symbols():
     try:
         pipeline = [
             {"$group": {
-                "_id": {"symbol": "$symbol", "exchange": "$exchange"},
+                "_id": {
+                    "symbol": "$symbol",
+                    "exchange": "$exchange"
+                },
                 "signal_count": {"$sum": 1},
                 "success_rate": {"$avg": "$success_probability"},
                 "last_analysis": {"$max": "$timestamp"}
