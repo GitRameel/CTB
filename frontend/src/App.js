@@ -39,7 +39,9 @@ function App() {
     setAnalysis(null);
 
     try {
-      const response = await axios.post(`${API}/analyze/${encodeURIComponent(symbol)}?exchange=${exchange}`);
+      // Remove slash from symbol for API call
+      const formattedSymbol = symbol.replace("/", "");
+      const response = await axios.post(`${API}/analyze/${encodeURIComponent(formattedSymbol)}?exchange=${exchange}`);
       setAnalysis(response.data);
       await fetchAnalyzedSymbols();
     } catch (e) {
